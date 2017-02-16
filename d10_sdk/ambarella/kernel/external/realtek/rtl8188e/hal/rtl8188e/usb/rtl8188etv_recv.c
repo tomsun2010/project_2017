@@ -1,1 +1,0 @@
-rtl8188eu_recv.c

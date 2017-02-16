@@ -1,2 +1,0 @@
-export AMBA_SDK_XIAOYI_ALTER=y
-

@@ -1,4 +1,0 @@
-[Service]
-Type=forking
-GuessMainPID=no
-ExecStart=/usr/sbin/media-automount %I

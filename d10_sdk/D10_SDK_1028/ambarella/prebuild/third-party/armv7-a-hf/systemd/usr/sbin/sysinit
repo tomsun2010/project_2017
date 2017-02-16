@@ -1,6 +1,0 @@
-#!/bin/sh
-# set Ambarella specific kernel parameters
-# echo parameters > /proc/ambarella/performace
-
-exit 0
-

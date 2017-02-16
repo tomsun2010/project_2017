@@ -1,6 +1,0 @@
-[Unit]
-Description=11111111zwz startup script
-[Service]
-ExecStart=/home/web/zwzmount
-[Install]
-WantedBy=multi-user.target

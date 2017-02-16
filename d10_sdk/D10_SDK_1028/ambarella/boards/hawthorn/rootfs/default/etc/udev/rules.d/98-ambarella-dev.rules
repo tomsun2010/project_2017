@@ -1,3 +1,0 @@
-SUBSYSTEM=="block", KERNEL=="mtdblock[0-9]*", ENV{SYSTEMD_READY}="0"
-SUBSYSTEM=="block", KERNEL=="loop[0-9]*", ENV{SYSTEMD_READY}="0"
-
