@@ -1,0 +1,175 @@
+
+/*
+ * Copyright (C) 2013 Ambarella,Inc. - http://www.ambarella.com/
+ * Author: Cao Rongrong <rrcao@ambarella.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+
+/include/ "ambarella-s2l.dtsi"
+
+/ {
+	model = "Ambarella S2L Hawthorn Board";
+	compatible = "ambarella,hawthorn", "ambarella,s2l";
+
+	chosen {
+		bootargs = "console=ttyS0 ubi.mtd=lnx root=ubi0:rootfs rw rootfstype=ubifs init=/linuxrc no_console_suspend";
+                ambarella,gpio-notify-mcu = <20>;
+	};
+
+	apb@e8000000 {
+		i2c0: i2c@e8003000 {
+			status = "ok";
+
+			ambvin0@01 {
+				compatible = "ambarella,ambvin";
+				reg = <0x01>;	/* fake address, will be overwritten in runtime */
+			};
+		};
+		
+		ir@e8006000 {
+			compatible = "ambarella,ir";
+			status = "disabled";
+		};
+	};
+
+	ahb@e0000000 {
+		sdmmc0@e0002000 {
+		pinctrl-0 = <&sdmmc0_pins_4bit>;
+			slot@0 {
+				no-1-8-v;
+				max-frequency = <24000000>;
+				amb,fixed-wp = <0>;
+			};
+		};
+
+		sdmmc1@e000c000 {
+			status = "ok";
+			slot@0 {
+				no-1-8-v;
+				keep-power-in-suspend;
+				max-frequency = <50000000>;
+				bus-width = <4>;
+			};
+		};
+
+		uart1: uart@e0032000 {
+			compatible = "ambarella,uart";
+			reg = <0xe0032000 0x1000>;
+			interrupts = <25 0x4>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart1_pins_b &uart1_flow_pins_c>;
+			/*pinctrl-0 = <&uart1_pins_d>;*/
+			status = "ok";
+			amb,msr-used;
+			amb,txdma-used;
+			/* amb,tx-fifo-fix; */
+			/* need to select pinctrl setup in board dts */
+		};
+
+		mac0: ethernet@e000e000 {
+			compatible = "ambarella,eth";
+			status = "disabled";
+		};
+
+		spi0: spi@e0020000 {
+			status = "disabled";
+		};
+
+
+		spi1: spi@e0021000 {
+			cs-gpios = <&gpio 10 0>;
+			status = "ok";
+
+			ak7755:codec@0 {
+				compatible = "akm,ak7755";
+				reg = <0>;
+				spi-max-frequency = <1000000>;
+				spi-cpha;
+				spi-cpol;
+				ak7755,pdn-gpio = <&gpio 80 0>;
+				ak7755,pwr-gpio = <&gpio 11 0x1>;
+				/*ak7755,avdd-gpio = <12>;*/
+				/*ak7755,dvdd-gpio = <11>;*/
+				/*ak7755,pa_l1-gpio = <49>;*/
+				/*ak7755,pa_l2-gpio = <51>;*/
+				/*ak7755,pa_r1-gpio = <50>;*/
+				/*ak7755,pa_r2-gpio = <53>;*/
+			};
+		};
+	};
+
+	rct@ec170000 {
+		usbphy: usbphy@ec170050 {
+			/* high will trigger the ocp interrupt */
+			amb,ocp-polarity = <0>;
+			pinctrl-names = "default";
+			/* pinctrl-0 = <&usb_host0_pins>; */
+			/* id-gpios = <&gpio 3 0x0>; */
+		};
+	};
+
+	sound {
+		compatible = "ambarella,audio-board";
+		amb,model = "Ambarella @ Audio";
+		amb,i2s-controllers = <&i2s0>;
+		amb,audio-codec = <&ak7755>;
+		amb,dummy-codec = <&dummycodec>;
+		amb,dai_fmt = <0>;
+		amb,dummy_dai_fmt = <4>;
+		amb,clk_fmt = <0>;
+		amb,codec-name = "ak7755";
+		amb,stream-name = "ak7755 PCM";
+		amb,codec-dai-name = "ak7755-AIF1";
+		amb,audio-routing = "IN1",     "Mic internal",
+												"IN2",     "Mic internal",
+												"IN3",     "Mic internal",
+												"IN4",     "Mic internal",
+												"Speaker",  "Line Out1",
+												"Speaker",  "Line Out2";
+	};
+
+    bogus_bus {
+		pwm_bl@0 {
+    	status = "disabled";
+			compatible = "pwm-backlight";
+			reg = <0>;
+			pwms = <&pwm 0 200000 0>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&pwm0_pins_c>;
+			brightness-levels =
+				<0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+				16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+				32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+				48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+				64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+				80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+				96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111
+				112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+				128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+				144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+				160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+				176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+				192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+				208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+				224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+				240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255>;
+			default-brightness-level = <0>;
+		};
+	};
+
+	iav {
+		compatible = "ambarella,iav";
+
+		/* node for vin controller */
+		vinc0 {
+      /*vinpwr-gpios = <&gpio 91 1>;*/
+      /*vinrst-gpios = <&gpio 92 0>;*/
+			/* vinpwr-gpios = <>; */
+		};
+	};
+};
+
